@@ -35,7 +35,7 @@ Livrables portfolio :
 
 ## 2. Contraintes
 
-- **Disque** : aucune brique à écritures lourdes et continues. Pas de Wazuh, pas de stack Elasticsearch/OpenSearch/Cassandra. Toute brique candidate est mesurée avant adoption (§ 8).
+- **Disque** : aucune brique à écritures lourdes et continues. Pas de Wazuh, pas de stack Elasticsearch/OpenSearch/Cassandra. Toute brique candidate est mesurée avant adoption (§ 9).
 - **Isolation** : les samples contiennent de vrais liens et de vraies pièces jointes. On les ouvre uniquement dans une VM jetable (overlay qcow2), réseau isolé ou sans sortie. Aucun clic hors VM, tout est défangé dans les rapports.
 - **Pas de remédiation réelle** : le projet ne touche à aucun système réel. Le rapport recommande les actions (bloquer le domaine, purger le mail, forcer le reset du compte). En lab, on peut simuler l'effet, par exemple ajouter le domaine au résolveur DNS local isolé.
 - **Décisions différées** : SIEM, SOAR et IA se tranchent aux points de décision G1 à G3 (§ 7), pas avant.
@@ -137,7 +137,7 @@ Analyse de samples collectés. Rien n'est guidé. Les samples montrent des indic
 
 **Contrôles légitimes (2 à 3)** : messages de vérification ou notifications issus de services réels connus, exportés en .eml depuis Gmail ou d’autres plateformes. Anonymiser l’adresse et les codes avant tout dépôt public. Ils servent à apprendre ce que le “normal” donne : authentification valide, domaine cohérent, comportement attendu. Le verdict attendu est « Légitime », même si le contexte semble suspect. Vérifier les en-têtes d’authentification avant de conclure.
 
-Les échantillons légitimes peuvent provenir de ma boîte mail, de notifications d’application ou de services réels connus, à condition d’être vérifiés comme non douteux. L’objet n’est pas de trouver un mail “parfaitement banal”, mais de disposer d’un point de comparaison fiable pour distinguer les signaux d’authentification et les indicateurs de phishing.
+Les échantillons légitimes peuvent provenir de ma boîte mail, de notifications d’application ou de services réels connus, à condition d’être vérifiés comme non douteux. L’objet n’est pas de trouver un mail « parfaitement banal », mais de disposer d’un point de comparaison fiable pour distinguer les signaux d’authentification et les indicateurs de phishing.
 
 Les samples de phishing viennent de [phishing_pot](https://github.com/rf-peixoto/phishing_pot/) : mails réels collectés par honeypots et anonymisés (adresse remplacée par `phishing@pot`).
 
@@ -151,9 +151,7 @@ Les samples de phishing viennent de [phishing_pot](https://github.com/rf-peixoto
 7. Verdict, niveau de confiance, technique MITRE (T1566.001 pièce jointe, T1566.002 lien).
 8. Remédiation recommandée.
 
-Le but n’est pas de démontrer qu’un mail est “de langue anglaise ou française” ou pas, mais de montrer que le verdict se base sur les signaux techniques et le contexte, pas sur une simple impression visuelle.
-
-**Sortie** : documents détaillés de la logique d'analyse et des résultats (transparence totale), au gabarit de l'Annexe A. Les tableaux d'IOC deviennent la vérité terrain de la phase 2.
+**Sortie** : documents détaillés de la logique d'analyse et des résultats (transparence totale), au gabarit de rapport d'analyse (fin de document). Les tableaux d'IOC deviennent la vérité terrain de la phase 2.
 
 ### Phase 2 - Pipeline Python
 
@@ -176,7 +174,7 @@ Automatiser la partie manuelle de l'analyse. L'objectif principal est l'extracti
 
 Voir ce qui se passe dans un SOC quand un utilisateur clique sur ce genre de mail, et comment la corrélation se manifeste dans les logs.
 
-**Lab** : Kali prépare le mail et un site fictif. Une VM victime clique. Un serveur web local inoffensif journalise les accès, plus un résolveur DNS local journalisé. Réseau isolé, jamais exposé à Internet. Page générique, identifiants factices. Ce scénario reste un bonus utile, pas le cœur de la démonstration.
+**Lab** : Kali prépare le mail et un site fictif. Une VM victime clique. Un serveur web local inoffensif journalise les accès, plus un résolveur DNS local journalisé. Réseau isolé, jamais exposé à Internet. Page générique, identifiants factices.
 
 **Événements à provoquer et observer**
 1. Email livré (trace de réception).
@@ -185,10 +183,10 @@ Voir ce qui se passe dans un SOC quand un utilisateur clique sur ce genre de mai
 4. Téléchargement du fichier de test, ou saisie d'identifiants factices sur la page.
 
 **Profondeur**
-- Niveau 1 (obligatoire) : événements 1 à 4 vus dans les logs DNS et HTTP.
-- Niveau 2 (à effleurer) : après la saisie d'identifiants factices, une connexion « attaquant » simulée depuis une autre adresse sur une source d'authentification de lab (SSH ou petite appli), et une règle qui la détecte. C'est ce qui permet de parler de compromission de compte.
+- Niveau 1 (obligatoire, livrable de la phase) : événements 1 à 4 vus dans les logs DNS et HTTP.
+- Niveau 2 (optionnel, à effleurer si le temps le permet) : après la saisie d'identifiants factices, une connexion « attaquant » simulée depuis une autre adresse sur une source d'authentification de lab (SSH ou petite appli), et une règle qui la détecte. C'est ce qui permet de parler de compromission de compte.
 
-Wireshark ou tcpdump aident à voir DNS et HTTP en clair sur le site. Leur présence est utile pour la preuve, mais la démonstration reste secondaire dans le cadre de ce projet.
+Wireshark ou tcpdump aident à voir DNS et HTTP en clair sur le site. C'est une capture, pas un log : borne la taille des fichiers.
 
 **Sortie** : tableau « événement → source de log → champ clé → règle de détection », 2 à 3 règles écrites, corrélation avec les IOC extraits par le pipeline. Puis point de décision G1.
 Pour observer les logs sous la contrainte disque : Splunk Free, ou Grafana + Loki, ou corrélation Python sur fichiers.
@@ -217,7 +215,7 @@ Points de décision G2 et G3 (§ 7), puis implémentation du choix retenu.
 
 | ID | Quand | Question | Critères | Défaut proposé |
 |---|---|---|---|---|
-| G1 | Fin phase 3 | Quel outil pour lire et corréler les logs ? | Écritures disque mesurées (§ 8), RAM, temps de mise en place, valeur CV | Splunk Free si la mesure est acceptable ; sinon Grafana + Loki ; sinon corrélation Python sur fichiers de logs |
+| G1 | Fin phase 3 | Quel outil pour lire et corréler les logs ? | Écritures disque mesurées (§ 9), RAM, temps de mise en place, valeur CV | Splunk Free si la mesure est acceptable ; sinon Grafana + Loki ; sinon corrélation Python sur fichiers de logs |
 | G2 | Début phase 4 | Orchestration et gestion de cas ? | Même mesure disque, RAM disponible | Playbooks Python et rapports de cas en Markdown |
 | G3 | Début phase 4 | Intégrer un modèle d'IA ? API ou local ? | Quota et coût, RAM et disque pour un modèle local, confidentialité | Intégration limitée au rôle décrit en phase 4 |
 
@@ -235,6 +233,13 @@ Points de décision G2 et G3 (§ 7), puis implémentation du choix retenu.
 | Scope qui gonfle | Tout ajout passe par le bonus |
 | Infra qui dévore le temps | Outils lourds exclus, décisions G1 à G3 sur mesure ; le cœur du projet reste l'analyse d'email |
 | Injection de prompt via l'email | Entrée non fiable, sortie structurée validée et échappée, aucun outil donné au modèle |
+
+## 9. Mesurer les écritures disque
+
+1. Relevé de référence : 1 h VM allumée au repos (`iostat -d` ou `iotop -o`).
+2. Relevé en charge : 1 h avec le scénario de la phase 3.
+3. Noter les Mo écrits dans les deux cas et fixer ton seuil d'acceptation avant de décider.
+4. VM de lab sur overlay jetable ; la détruire après chaque session.
 
 ## 10. Définition de « terminé »
 
@@ -266,4 +271,4 @@ Contexte analyste (séparé des faits)
 
 Remédiation recommandée
 - <bloquer, purger, notifier, reset>
-```Annexe A - 
+```
