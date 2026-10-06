@@ -1,43 +1,70 @@
-**Section 4:** Email Header Analysis
+# Section 4: Email Header Analysis
 
-In the previous section, we looked at what a phishing email is, what the header information is, and what it does. Now, when we suspect that an email is phishing, we will know what we should do and what the analysis process should be like.
+This exercise builds on [Section 3](./header.md) and uses the
+`May God Bless You...eml` message from the Academy's `Header-Challenge.zip`
+archive. The archive password is provided in the exercise instructions.
 
-I will use the "C:\\Users\\LetsDefend\\Desktop\\Files\\Header-Challenge.zip" file to solve the questions below. File Password: infected. In our case where I downloaded them it is [] 
+[`May God Bless You...eml`](./May%20God%20Bless%20You...eml)
 
-### Question 1: Are the sender's address and the address in the "Reply-To" area different? Answer Format: Y/N
-```shell
-grep From May\ God\ Bless\ You...eml
+Run the commands below from the directory containing the sample message.
 
-From: "Mrs. Dara Patton"<mrs.dara@jcom.home.ne.jp>
-grep Reply-To May\ God\ Bless\ You...eml
+## Questions and analysis
 
-Reply-To: <mrs.dara@daum.net>
+### 1. Are the sender's address and the `Reply-To` address different?
 
-
-```
-*Answer: Y*
-
-### Question 2: If I want to reply to this email, which address will it be sent to?
-```shell
-grep Reply-To May\ God\ Bless\ You...eml
-Reply-To: <mrs.dara@daum.net>
-
-```
-
-*Answer: mrs.dara@daum.net*
-
-### Question 3: What IP address was the email sent from?
+Compare the two fields. A difference means a reply may go to an address other
+than the one shown in `From`.
 
 ```shell
-grep Received May\ God\ Bless\ You...eml
-
-Received: by 2002:a05:7000:4689:0:0:0:0 with SMTP id l9csp4131148map;
-X-Received: by 2002:a63:8bc9:0:b0:365:3b6:47fb with SMTP id j192-20020a638bc9000000b0036503b647fbmr17942508pge.147.1645496288442;
-Received: from mgw1.mx.zaq.ne.jp (snd01105-jc.im.kddi.ne.jp. [222.227.81.181])
-Received-SPF: pass (google.com: domain of mrs.dara@jcom.home.ne.jp designates 222.227.81.181 as permitted sender) client-ip=222.227.81.181;
-Received: from mgw1.mx.zaq.ne.jp by osmta1005-jc.im.kddi.ne.jp with ESMTP
-Received: from User by omta1005-jc.im.kddi.ne.jp with SMTP
-
+grep -iE '^(From|Reply-To):' 'May God Bless You...eml'
 ```
 
-*Answer: 222.227.81.181*
+The sample has `mrs.dara@jcom.home.ne.jp` in `From` and
+`mrs.dara@daum.net` in `Reply-To`.
+
+<details>
+<summary>Reveal answer</summary>
+
+**Answer:** `Y`
+
+</details>
+
+### 2. If you reply to this email, which address will receive the reply?
+
+When present, `Reply-To` specifies the reply destination. Check its value with:
+
+```shell
+grep -i '^Reply-To:' 'May God Bless You...eml'
+```
+
+<details>
+<summary>Reveal answer</summary>
+
+**Answer:** `mrs.dara@daum.net`
+
+</details>
+
+### 3. What IP address was the email sent from?
+
+Inspect the `Received` lines to follow the message's relay path. In this
+sample, the external sending host is shown in the line beginning
+`Received: from mgw1.mx.zaq.ne.jp`; the same address also appears in the SPF
+result.
+
+```shell
+grep -iE '^(Received|Received-SPF):' 'May God Bless You...eml'
+```
+
+The external sending host shown in the sample is `222.227.81.181`.
+
+<details>
+<summary>Reveal answer</summary>
+
+**Answer:** `222.227.81.181`
+
+</details>
+
+The order of `Received` fields matters: mail servers normally prepend their
+own trace fields, so read the chain from the bottom upward to follow the
+message's path. Header values can be forged; use trusted receiving-server
+records and corroborating evidence when drawing conclusions.

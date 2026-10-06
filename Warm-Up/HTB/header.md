@@ -1,76 +1,75 @@
-# **Section 3:** What is an Email Header and How to Read Them?
+# Section 3: What Is an Email Header and How to Read It?
 
-The header is a section of the email containing information such as sender, recipient, and date. There are also components such as 'Return-Path', 'Reply-To', and 'Received'
+An email header contains routing and message metadata, including fields such as
+`From`, `To`, `Date`, `Return-Path`, `Reply-To`, and `Received`. These fields
+help an analyst understand who a message claims to be from, where replies are
+directed, and which mail servers handled it.
 
-For the rest I use my own machine instead of the one provided by hackthebox , connect using openvpn.
-```shell
-sudo openvpn /path/to/downloaded/openvpn/folder/
-```
+For the local VPN and remote-desktop workflow used in these exercises, see
+[Lab setup](./README.md#lab-setup).
 
-Verify with 
-```shell
-ip a
-```
+## Sample email
 
-![ip](./evidences/IP.png)
+The exercise uses **Top 3 Blog posts for SOC teams 👀.eml**, downloaded from the
+lab's `Challenge+Mail.zip` archive:
 
-And then start the target machine and connect to it using the command (xfreerdp should be installed first but prompted if not, surely).
+[`Top 3 Blog posts for SOC teams 👀.eml`](./Top%203%20Blog%20posts%20for%20SOC%20teams%20👀.eml)
 
-```shell
-xfreerdp /v:10.129.194.171 /u:letsdefend /p: /d:. /dynamic-resolution
-```
+The archive password is provided in the Academy exercise instructions. The
+commands below assume that you are in the directory containing the sample
+message.
 
-![connection](./evidences/rdp.png)
+## Questions and analysis
 
-Because of laggs I downloaded the .eml using
-```shell
-xfreerdp /v:10.129.194.171 /u:letsdefend /p: /d:. \
-  /dynamic-resolution /scale-desktop:150 /drive:stuff,$HOME/My_codes_and_Projects/EmailAnalysis/Warm-Up/HTB/header/
+### 1. If you reply to this email, what address will receive the reply?
 
-```
-and in file explorer under this pc I copy pasted
-
-<<Note: You can use the clipboard to paste data to the lab machine or copy data from the lab machine. Note: Use the "C:\\Users\\LetsDefend\\Desktop\\Files\\Challenge+Mail.zip" file to solve the questions below. File Password: infected>>
-
-In the machine it is clear but as I downloaded them , in local this section focuses on 
-[*Top 3 Blog posts for SOC teams 👀.eml*](./Top%203%20Blog%20posts%20for%20SOC%20teams%20👀.eml) 
-
-### Question 1 : If we wanted to respond to this email, what would be the recipient's address?
-
-
-Recipient's address to respond to is clearly the sender of this email.
-
-So
-```shell
-grep From Top\ 3\ Blog\ posts\ for\ SOC\ teams\ 👀.eml
-	h=Subject:From:Reply-To:To:Date:Message-ID:List-ID:List-Unsubscribe:
-From: =?utf-8?Q?LetsDefend?= <info@letsdefend.io>
-
-```
-
-*Answer*: info@letsdefend.io
-
-### Question 2: What year was the email sent?
+The `From` field identifies the address shown as the sender. Compare it with
+`Reply-To` to confirm the reply destination:
 
 ```shell
-grep Date Top\ 3\ Blog\ posts\ for\ SOC\ teams\ 👀.eml
-	h=Subject:From:Reply-To:To:Date:Message-ID:List-ID:List-Unsubscribe:
-	 List-Unsubscribe-Post:Content-Type:MIME-Version:CC:Date:Subject;
-Date: Mon, 21 Mar 2022 20:45:17 +0000
-
+grep -iE '^(From|Reply-To):' 'Top 3 Blog posts for SOC teams 👀.eml'
 ```
 
-*Answer*:<details><summary>*Answer :*</summary>2022</details>
+The sample has matching `From` and `Reply-To` addresses.
 
-### Question 3: What is the Message-ID? (without > < )
+<details>
+<summary>Reveal answer</summary>
+
+**Answer:** `info@letsdefend.io`
+
+</details>
+
+### 2. In what year was the email sent?
+
+Read the `Date` field:
 
 ```shell
-grep -i "^Message-Id:" Top\ 3\ Blog\ posts\ for\ SOC\ teams\ 👀.eml
-Message-ID: <74bda5edf824cea8aad36e707.675c34a61f.20220321204512.a02caaccf3.a268ce5a@mail41.suw13.rsgsv.net>
-
+grep -i '^Date:' 'Top 3 Blog posts for SOC teams 👀.eml'
 ```
 
-*Answer* : 74bda5edf824cea8aad36e707.675c34a61f.20220321204512.a02caaccf3.a268ce5a@mail41.suw13.rsgsv.net
+The date shown is Monday, 21 March 2022.
 
+<details>
+<summary>Reveal answer</summary>
 
-Now for section 4 
+**Answer:** `2022`
+
+</details>
+
+### 3. What is the Message-ID, without the surrounding angle brackets?
+
+The `Message-ID` field identifies this message. Remove only the surrounding
+`<` and `>` characters when submitting it:
+
+```shell
+grep -i '^Message-ID:' 'Top 3 Blog posts for SOC teams 👀.eml'
+```
+
+<details>
+<summary>Reveal answer</summary>
+
+**Answer:** `74bda5edf824cea8aad36e707.675c34a61f.20220321204512.a02caaccf3.a268ce5a@mail41.suw13.rsgsv.net`
+
+</details>
+
+Continue to [Section 4: Email Header Analysis](./header-analysis.md).
