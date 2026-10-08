@@ -188,7 +188,7 @@ Voir ce qui se passe dans un SOC quand un utilisateur clique sur ce genre de mai
 
 Wireshark ou tcpdump aident à voir DNS et HTTP en clair sur le site. C'est une capture, pas un log : borne la taille des fichiers.
 
-**Sortie** : tableau « événement → source de log → champ clé → règle de détection », 2 à 3 règles écrites, corrélation avec les IOC extraits par le pipeline. Puis point de décision G1.
+**Sortie** : tableau « événement → source de log → champ clé → règle de détection », 2 à 3 règles écrites en sigma, corrélation avec les IOC extraits par le pipeline. Puis point de décision G1.
 Pour observer les logs sous la contrainte disque : Splunk Free, ou Grafana + Loki, ou corrélation Python sur fichiers.
 
 ### Phase 4 - Automatisation et IA
