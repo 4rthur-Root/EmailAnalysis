@@ -1,0 +1,76 @@
+Delivered-To: fake-me@gmail.com
+Received: by 2002:a17:504:63:b0:1e9d:ae34:52ee with SMTP id q3csp641376njq;
+        Tue, 18 Aug 2026 00:00:47 -0700 (PDT)
+X-Received: by 2002:a05:6830:2313:b0:7e6:e162:915 with SMTP id 46e09a7af769-7f3de38c4e3mr32517898a34.5.1787036447491;
+        Tue, 18 Aug 2026 00:00:47 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1787036447; cv=none;
+        d=google.com; s=arc-20260327;
+        b=L5ZpAt3mdWlrXEbTR4ijsstzkvjclyxKCBZOx49DYQplqSVb30kayZJGo3Tj+MzHch
+         0Pv1UHAIlB+VNozIwfbmiDZKVjRkQy44vVmi1oGw6RKp9vRfm0c7yCbIkV9e3rD93ckj
+         f44xe4UDR4DUQnYRhWqR9mX0ZpB7yEJKnsiHhyFgpl6z0uKVqeKQKRhnqi1gGFzA711y
+         FQW47l9+uQ3MFj8qcAwTcW5QFr5AYQsIhT0D8X56zTRJOHM54EXrGBCSsjcUe26yB0od
+         A+DAZ0/vYUSWgf6onFcoRF5KRlqfcR8IOfoTGXzc+mx0I297YPnIXu/ZELul5Br8CpYh
+         8iQA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=message-id:date:content-transfer-encoding:mime-version:subject:to
+         :from:dkim-signature;
+        bh=CV7se2UvS6kWHrMWS88Arw1fqGGaoXuM9s4Trll5bBY=;
+        fh=uKCGD9GGpjvKJfFq5jGBnKymL1iIPI58vXNMTPufRk8=;
+        b=pFEnslqTw8L0uFI+GlTjG/Uic4wSwBWBPZkchhB1N7NgBf39R03nwitiGGuSjflRC7
+         RTfVNRPLwJ4sNnNDUtrZhvegUPfAym3kNKtOvdJHdGKubhA/dsRi7V/gPi7m7bVHxgPi
+         Mnxo0pLnsZrRJlcJNdGr7s5CZhWOF/CAYkPeQeFo14ajRD4YV1WD4zOg4DXJ94gHMY5K
+         zo8m8Fv1ViFi3qLt6afisWT8T+DkuRUBjExzSBhgRhvGurVLTnkY4vdzYOjiFlksmwBQ
+         22YftH2glzO7AmRK9IRcjNocxOeXhN4Uw8Oe2BUrB0TTL67Fad8g87alF2zNKfWD97gT
+         A5fQ==;
+        dara=google.com
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@support.whatsapp.com header.s=s2048-2018-q2 header.b=ghIUTBUJ;
+       spf=pass (google.com: domain of noreply@support.whatsapp.com designates 69.171.232.131 as permitted sender) smtp.mailfrom=noreply@support.whatsapp.com;
+       dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=support.whatsapp.com
+Return-Path: <noreply@support.whatsapp.com>
+Received: from 69-171-232-131.mail-mail.facebook.com (69-171-232-131.mail-mail.facebook.com. [69.171.232.131])
+        by mx.google.com with ESMTPS id 46e09a7af769-7f41bee1076si6942228a34.4.2026.08.18.00.00.47
+        for <fake-me@gmail.com>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Aug 2026 00:00:47 -0700 (PDT)
+Received-SPF: pass (google.com: domain of noreply@support.whatsapp.com designates 69.171.232.131 as permitted sender) client-ip=69.171.232.131;
+Authentication-Results: mx.google.com;
+       dkim=pass header.i=@support.whatsapp.com header.s=s2048-2018-q2 header.b=ghIUTBUJ;
+       spf=pass (google.com: domain of noreply@support.whatsapp.com designates 69.171.232.131 as permitted sender) smtp.mailfrom=noreply@support.whatsapp.com;
+       dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=support.whatsapp.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=support.whatsapp.com;
+	s=s2048-2018-q2; t=1787036445;
+	bh=CV7se2UvS6kWHrMWS88Arw1fqGGaoXuM9s4Trll5bBY=;
+	h=From:To:Subject:Mime-Version:Content-Type:Date;
+	b=ghIUTBUJE2y2QlvyJz7gk4pJMkud4Z8UUTt6LeMlW2pH/U0TQ9HBalPiXoEMIN4fN
+	 BmdhBz1we/OxpEf5THcLnjaz9uIwWnYz/VhsEUIGaTjBNFZzC5UdET8QWf+jUtwJBZ
+	 zqi4X/akLBRh61HKgqoLBF4GL4P8S2qOG3Ui2gUNeDQnUW0SE5EaTix1ZBshv2yYg/
+	 iipTX9GXYZu7GPkVRWKnKtlA11rgdcGpGnvRevihtN6VL4KM3a3Gk9O6xYxbiAZW/V
+	 r/d75iEs6CWI372WO/5AwMr5lSpOoYfPQ64zqnjv/aEDv/ZV1a5w4nVUihNjSXEgUD
+	 DjKWHqOGytJZA==
+From: "WhatsApp Business" <noreply@support.whatsapp.com>
+To: fake-me@gmail.com
+Subject: Kode Verifikasi WhatsApp: 810-174
+Mime-Version: 1.0
+Content-Type: multipart/alternative; boundary="Next_Part(42133dad3de1be1dc676e8be9d5baf7d)"
+Content-Transfer-Encoding: 7bit
+Date: Tue, 18 Aug 2026 00:00:45 -0700
+Message-ID: <af16c22c-7650-435c-b53c-05548f9c2c0c@support.whatsapp.com>
+
+--Next_Part(42133dad3de1be1dc676e8be9d5baf7d)
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Transfer-Encoding: quoted-printable
+
+Ketuk tautan untuk memverifikasi akun Anda di perangkat ini: https://b.whatsapp.com/810174.
+
+Atau salin lalu tempel kode ini ke aplikasi WhatsApp Business: 810-174.
+
+Jangan bagikan kode atau email ini kepada siapa pun. Jika Anda tidak meminta verifikasi, silakan abaikan pesan ini.
+
+--Next_Part(42133dad3de1be1dc676e8be9d5baf7d)
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+<html>Ketuk tautan untuk memverifikasi akun Anda di perangkat ini: <a href=3D'https://b.whatsapp.com/810174'>https://b.whatsapp.com/810174</a>.<br><br>Atau salin lalu tempel kode ini ke aplikasi WhatsApp Business: 810-174.<br><br>Jangan bagikan kode atau email ini kepada siapa pun. Jika Anda tidak meminta verifikasi, silakan abaikan pesan ini.</html>
+--Next_Part(42133dad3de1be1dc676e8be9d5baf7d)--
+.
